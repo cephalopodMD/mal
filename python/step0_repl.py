@@ -16,13 +16,11 @@ def rep(in_var):
     return printResult
 
 def main():
-    history = []
     while True:
         # TODO history + editing of history
         try:
-            in_var_ = input("user> ")
-            history.append(in_var)
-            rep(in_var_)
+            in_str = input("user> ")
+            print(rep(in_str))
         except EOFError:
             print("\nexit")
             break
