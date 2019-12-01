@@ -8,8 +8,10 @@
 .m2
 .ivy2
 .sbt
+.mypy*/
 .npm
 .node-gyp
+.vscode
 package-lock.json
 .elm
 */experiments
