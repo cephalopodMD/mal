@@ -1,6 +1,7 @@
 import re
 from typing import List, Any
 from maltypes import *
+from printer import pr_str
 
 class Reader:
     def __init__(self, tokens: List[str]):
@@ -31,7 +32,7 @@ class Reader:
         result = MalList()
         while self.peek() != ')':
             if self.position == len(self.tokens) - 1:
-                raise Exception('.*(EOF|end of input|unbalanced).*')
+                raise MalException('.*(EOF|end of input|unbalanced).*')
             result.val.append(self.read_form())
         self.next()
         return result
@@ -41,7 +42,7 @@ class Reader:
         result = MalVector()
         while self.peek() != ']':
             if self.position == len(self.tokens) - 1:
-                raise Exception('.*(EOF|end of input|unbalanced).*')
+                raise MalException('.*(EOF|end of input|unbalanced).*')
             result.val.append(self.read_form())
         self.next()
         return result
@@ -51,17 +52,17 @@ class Reader:
         result = MalDict()
         while self.peek() != '}':
             if self.position == len(self.tokens) - 1:
-                raise Exception('.*(EOF|end of input|unbalanced).*')
-            key = self.read_form()
+                raise MalException('.*(EOF|end of input|unbalanced).*')
+            key = pr_str(self.read_form())
             if self.peek() == '}' or self.position == len(self.tokens) - 1:
-                raise Exception('.*(EOF|end of input|unbalanced).*')
+                raise MalException('.*(EOF|end of input|unbalanced).*')
             result.val[key] = self.read_form()
         self.next()
         return result
 
     def read_atom(self) -> MalType:
         token = self.next()
-        if re.match(r"\d+", token):
+        if re.match(r"-?\d+", token):
             return MalNumber(token)
         elif token == "'":
             return MalType(f"(quote {self.read_form().quote()})")
@@ -78,10 +79,10 @@ class Reader:
             return MalType()
         elif token[0] == '"':
             if token == '"' or (not token[-1] == '"') or token.replace('\\\\','')[-2] == '\\':
-                raise Exception('.*(EOF|end of input|unbalanced).*')
-            string_token = '"'+token[1:-1].replace('\\"','"')\
-                                            .replace('\\n','\n')\
-                                            .replace('\\\\','\\')+'"'
+                raise MalException('.*(EOF|end of input|unbalanced).*')
+            string_token = token[1:-1].replace('\\"','"')\
+                                      .replace('\\n','\n')\
+                                      .replace('\\\\','\\')
             return MalString(string_token)
 
         return MalSymbol(token)
