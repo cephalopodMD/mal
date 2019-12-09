@@ -46,11 +46,15 @@ class MalNil(MalType):
     def quote(self):
         return "Nil"
 
-class MalTrue(MalType):
+class MalBool(MalType):
+    def __init__(self, val:bool=None):
+        self.val: bool = val or False
+
+class MalTrue(MalBool):
     def __init__(self, val=None):
         self.val: bool = True
 
-class MalFalse(MalType):
+class MalFalse(MalBool):
     def __init__(self, val=None):
         self.val: bool = False 
 
@@ -71,3 +75,10 @@ class MalDict(MalType):
 
     def quote(self):
         return f"{{{', '.join([k.quote()+' '+self.val[k].quote() for k in self.val])}}}"
+
+class MalFn(MalType):
+    def __init__(self, val=None):
+        self.val:str = val
+
+    def call(self, argv):
+        return self.val(*argv)

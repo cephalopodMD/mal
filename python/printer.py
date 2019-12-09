@@ -6,9 +6,9 @@ def pr_str(out: MalType, print_readably: bool=False) -> str:
     elif type(out) is MalNumber:
         return str(out.val)
     elif type(out) is MalList:
-        return f"({' '.join([pr_str(v) for v in out.val])})"
+        return f"({' '.join([pr_str(v, print_readably) for v in out.val])})"
     elif type(out) is MalVector:
-        return f"[{' '.join([pr_str(v) for v in out.val])}]"
+        return f"[{' '.join([pr_str(v, print_readably) for v in out.val])}]"
     elif type(out) is MalDict:
         keys = [k if k[0] == ':' else '"'+k+'"' for k in out.val]
         values = [pr_str(v, print_readably) for v in out.val.values()]
@@ -20,5 +20,11 @@ def pr_str(out: MalType, print_readably: bool=False) -> str:
                               .replace('"','\\"')+'"'
         else:
             return out.val
+    elif type(out) is MalFn:
+        return '#<function>'
+    elif type(out) is MalNil:
+        return 'nil'
+    elif isinstance(out, MalBool):
+        return str(out.val).lower()
     else:
         return out.val

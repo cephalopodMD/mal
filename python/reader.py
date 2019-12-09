@@ -64,6 +64,12 @@ class Reader:
         token = self.next()
         if re.match(r"-?\d+", token):
             return MalNumber(token)
+        elif token == "true":
+            return MalTrue()
+        elif token == "false":
+            return MalFalse()
+        elif token == "nil":
+            return MalNil()
         elif token == "'":
             return MalType(f"(quote {self.read_form().quote()})")
         elif token == "`":
@@ -80,9 +86,30 @@ class Reader:
         elif token[0] == '"':
             if token == '"' or (not token[-1] == '"') or token.replace('\\\\','')[-2] == '\\':
                 raise MalException('.*(EOF|end of input|unbalanced).*')
-            string_token = token[1:-1].replace('\\"','"')\
-                                      .replace('\\n','\n')\
-                                      .replace('\\\\','\\')
+            string_token = ''
+            special = False
+            tok = token[1:-1]
+            for a, b in zip(tok[:-1], tok[1:]):
+                if special:
+                    special = False
+                    continue
+                elif a == '\\':
+                    if b == '\\':
+                        string_token += '\\'
+                        special = True
+                    elif b == 'n':
+                        string_token += '\n'
+                        special = True
+                    elif b == '"':
+                        string_token += '"'
+                        special = True
+                else:
+                    string_token += a
+            if not special and tok:
+                string_token += tok[-1]
+            #string_token = token[1:-1].replace('\\"','"')\
+            #                          .replace('\\n','\n')\
+            #                          .replace('\\\\','\\')
             return MalString(string_token)
 
         return MalSymbol(token)
