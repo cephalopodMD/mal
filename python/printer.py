@@ -20,7 +20,7 @@ def pr_str(out: MalType, print_readably: bool=False) -> str:
                               .replace('"','\\"')+'"'
         else:
             return out.val
-    elif type(out) is MalFn:
+    elif type(out) is MalFn or type(out) is MalCustomFn:
         return '#<function>'
     elif type(out) is MalNil:
         return 'nil'

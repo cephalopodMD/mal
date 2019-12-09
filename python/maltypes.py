@@ -78,17 +78,17 @@ class MalDict(MalType):
 
 class MalFn(MalType):
     def __init__(self, val=None):
-        self.val:str = val
+        self.val:callable = val
 
     def call(self, argv):
         return self.val(*argv)
         
 class MalCustomFn(MalFn):
-    def __init__(self, val=None, params=None, ast=None, env=None):
-        self.val:str = val
+    def __init__(self, params=None, ast=None, env=None):
         self.params = params
         self.ast = ast
         self.env = env
 
     def call(self, argv):
-        return self.val(*argv)
+        new_env = Env(self.env, self.ast.val[1].val, argv)
+        return EVAL(self.ast.val[2], new_env)

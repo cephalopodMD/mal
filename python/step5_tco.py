@@ -64,10 +64,7 @@ def EVAL(ast: MalType, env: Env) -> MalType:
                         else:
                             return MalNil()
                     elif special_form.val == 'fn*':
-                        def fn(*exprs: List[MalType]):
-                            new_env = Env(env, ast.val[1].val, exprs)
-                            return EVAL(ast.val[2], new_env)
-                        return MalCustomFn(fn, ast.val[1], ast.val[2], env)
+                        return MalCustomFn(ast.val[1], ast.val[2], env)
                 f, *args = eval_ast(ast, env).val
                 if type(f) is MalCustomFn:
                     ast = f.ast
