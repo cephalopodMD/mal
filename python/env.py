@@ -2,7 +2,7 @@ from typing import Any, Optional
 from maltypes import *
 
 class Env:
-    def __init__(self, outer=None, binds=None, exprs=[]):
+    def __init__(self, outer=None, binds=[], exprs=[]):
         self.outer: Optional[Env] = outer
         self.data: Any = {}
         if binds:

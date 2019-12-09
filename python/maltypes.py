@@ -82,3 +82,13 @@ class MalFn(MalType):
 
     def call(self, argv):
         return self.val(*argv)
+        
+class MalCustomFn(MalFn):
+    def __init__(self, val=None, params=None, ast=None, env=None):
+        self.val:str = val
+        self.params = params
+        self.ast = ast
+        self.env = env
+
+    def call(self, argv):
+        return self.val(*argv)
