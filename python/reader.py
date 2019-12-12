@@ -18,6 +18,11 @@ class Reader:
         return self.tokens[self.position]
 
     def read_form(self) -> MalType:
+        while self.peek().startswith(";"):
+            self.next()
+        if self.position == len(self.tokens) - 1:
+            return MalType()
+
         if(self.peek()[0] == '('):
             return self.read_list()
         elif(self.peek()[0] == '['):
@@ -79,10 +84,7 @@ class Reader:
         elif token == "~@":
             return MalType(f"(splice-unquote {self.read_form().quote()})")
         elif token == "@":
-            return MalType(f"(deref {self.read_form().quote()})")
-        elif token == ";":
-            self.position == len(self.tokens) - 1
-            return MalType()
+            return MalList([MalSymbol('deref'), self.read_form()])
         elif token[0] == '"':
             if token == '"' or (not token[-1] == '"') or token.replace('\\\\','')[-2] == '\\':
                 raise MalException('.*(EOF|end of input|unbalanced).*')
@@ -107,9 +109,6 @@ class Reader:
                     string_token += a
             if not special and tok:
                 string_token += tok[-1]
-            #string_token = token[1:-1].replace('\\"','"')\
-            #                          .replace('\\n','\n')\
-            #                          .replace('\\\\','\\')
             return MalString(string_token)
 
         return MalSymbol(token)

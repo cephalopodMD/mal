@@ -26,5 +26,7 @@ def pr_str(out: MalType, print_readably: bool=False) -> str:
         return 'nil'
     elif isinstance(out, MalBool):
         return str(out.val).lower()
+    elif type(out) is MalAtom:
+        return f'(atom {pr_str(out.val, print_readably)})'
     else:
         return out.val

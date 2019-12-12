@@ -10,7 +10,7 @@ def eq(a, b):
         return type(a) == type(b) and a.val == b.val
 def slurp(s):
     with open(s,"r") as f:
-        return f.read()
+        return '\n'.join(f.readlines())
 
 ns = {
     '+': lambda a,b: a.add(b),
@@ -31,5 +31,10 @@ ns = {
     'prn': lambda *s: MalNil(print(' '.join([pr_str(v, True) for v in s]))),
     'println': lambda *s: MalNil(print(' '.join([pr_str(v, False) for v in s]))),
     'read-string': lambda s: read_str(s.val),
-    'slurp': lambda s: MalString(slurp(s.val))
+    'slurp': lambda s: MalString(slurp(s.val)),
+    'atom': lambda a: MalAtom(a),
+    'atom?': lambda a: MalBool(type(a) is MalAtom),
+    'deref': lambda a: a.val,
+    'reset!': lambda a, v: a.reset(v),
+    'exit': lambda: exit(),
 }
