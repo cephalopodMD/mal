@@ -76,13 +76,13 @@ class Reader:
         elif token == "nil":
             return MalNil()
         elif token == "'":
-            return MalType(f"(quote {self.read_form().quote()})")
+            return MalList([MalSymbol('quote'), self.read_form()])
         elif token == "`":
-            return MalType(f"(quasiquote {self.read_form().quote()})")
+            return MalList([MalSymbol('quasiquote'), self.read_form()])
         elif token == "~":
-            return MalType(f"(unquote {self.read_form().quote()})")
+            return MalList([MalSymbol('unquote'), self.read_form()])
         elif token == "~@":
-            return MalType(f"(splice-unquote {self.read_form().quote()})")
+            return MalList([MalSymbol('splice-unquote'), self.read_form()])
         elif token == "@":
             return MalList([MalSymbol('deref'), self.read_form()])
         elif token[0] == '"':

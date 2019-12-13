@@ -13,6 +13,7 @@ def slurp(s):
         return '\n'.join(f.readlines())
 
 ns = {
+    'exit': lambda: exit(),
     '+': lambda a,b: a.add(b),
     '-': lambda a,b: a.sub(b),
     '*': lambda a,b: a.mul(b),
@@ -36,5 +37,6 @@ ns = {
     'atom?': lambda a: MalBool(type(a) is MalAtom),
     'deref': lambda a: a.val,
     'reset!': lambda a, v: a.reset(v),
-    'exit': lambda: exit(),
+    'cons': lambda a, l: MalList([a] + list(l.val)),
+    'concat': lambda *l: MalList([item for sublist in l for item in list(sublist.val)]),
 }
