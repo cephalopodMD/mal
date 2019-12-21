@@ -79,6 +79,7 @@ class MalDict(MalType):
 class MalFn(MalType):
     def __init__(self, val=None):
         self.val:callable = val
+        self.is_macro = False
 
     def call(self, argv):
         return self.val(*argv)
@@ -88,6 +89,7 @@ class MalCustomFn(MalFn):
         self.params = params
         self.ast = ast
         self.env = env
+        self.is_macro = False
 
 class MalAtom(MalType):
     def __init__(self, val=None):

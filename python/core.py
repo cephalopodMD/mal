@@ -12,6 +12,11 @@ def slurp(s):
     with open(s,"r") as f:
         return '\n'.join(f.readlines())
 
+def nth(l, n):
+    if n.val >= len(l.val):
+        raise MalException('invalid list index')
+    return l.val[n.val]
+
 ns = {
     'exit': lambda: exit(),
     '+': lambda a,b: a.add(b),
@@ -39,4 +44,7 @@ ns = {
     'reset!': lambda a, v: a.reset(v),
     'cons': lambda a, l: MalList([a] + list(l.val)),
     'concat': lambda *l: MalList([item for sublist in l for item in list(sublist.val)]),
+    'nth': nth,
+    'first': lambda l: l.val[0] if type(l) is not MalNil and len(l.val) else MalNil(),
+    'rest': lambda l: MalList(l.val[1:]) if type(l) is not MalNil and len(l.val) else MalList(),
 }
